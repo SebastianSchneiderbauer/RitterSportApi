@@ -6,6 +6,7 @@
   ],
   "functions": {
     "api/photos.js": { "includeFiles": "ritterSportMemes/*.jpeg" },
-    "api/random.js": { "includeFiles": "ritterSportMemes/*.jpeg" }
+    "api/random.js": { "includeFiles": "ritterSportMemes/*.jpeg" },
+    "api/today.js": { "includeFiles": "ritterSportMemes/*.jpeg" }
   }
 }

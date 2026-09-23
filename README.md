@@ -10,11 +10,22 @@ A small, dependency-free API for the 77 JPEGs in [`ritterSportMemes/`](ritterSpo
 | --- | --- |
 | [`GET /api/photos/0`](https://ritter-sport-api.vercel.app/api/photos/0) | The JPEG with ID `0`. Replace `0` with another photo ID. |
 | [`GET /api/random`](https://ritter-sport-api.vercel.app/api/random) | One randomly selected JPEG. |
+| [`GET /api/today`](https://ritter-sport-api.vercel.app/api/today) | The Ritter Sport of the day, the same for everyone until the next reset. |
 
-Both endpoints return the image bytes with `Content-Type: image/jpeg` and an `X-Photo-Id` header. For example, to save a photo:
+All three endpoints return the image bytes with `Content-Type: image/jpeg` and an `X-Photo-Id` header. For example, to save a photo:
 
 ```sh
 curl -L -o photo.jpeg https://ritter-sport-api.vercel.app/api/photos/0
+```
+
+### Ritter Sport of the day
+
+`/api/today` changes at **00:00 UTC every day**. It sorts the available photo IDs numerically and picks one using the UTC day number modulo the number of photos. This cycles through every photo before repeating, without a database or scheduled job. Its `X-Next-Reset` response header gives the next reset as an ISO 8601 UTC timestamp. The [home page](https://ritter-sport-api.vercel.app/) shows that time in UTC and in your browser's local time.
+
+To see the response headers while saving today's image:
+
+```sh
+curl -sS -D - -o today.jpeg https://ritter-sport-api.vercel.app/api/today
 ```
 
 Errors are JSON:
@@ -27,7 +38,7 @@ Errors are JSON:
 
 ## Run checks locally
 
-Use Node.js (`node --test`) or Bun (`bun test`). The tests cover photo lookup, random selection, invalid IDs, and an empty collection. No packages need to be installed.
+Use Node.js (`node --test`) or Bun (`bun test`). The tests cover photo lookup, random selection, the daily reset, invalid IDs, and an empty collection. No packages need to be installed.
 
 ## Deployment
 

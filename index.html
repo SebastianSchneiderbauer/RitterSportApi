@@ -14,12 +14,42 @@
   </head>
   <body>
     <h1>Ritter Sport Photo API</h1>
-    <p>Get one of 77 photos. IDs run from <code>0</code> to <code>76</code>. Both endpoints return a JPEG image and an <code>X-Photo-Id</code> response header.</p>
+    <p>Get one of 77 photos. IDs run from <code>0</code> to <code>76</code>. Each endpoint returns a JPEG image and an <code>X-Photo-Id</code> response header.</p>
     <ul>
       <li><code>GET /api/photos/:id</code> — <a href="/api/photos/0">view photo 0</a></li>
       <li><code>GET /api/random</code> — <a href="/api/random">view a random photo</a></li>
+      <li><code>GET /api/today</code> — <a href="/api/today">view the Ritter Sport of the day</a></li>
     </ul>
     <p>An unknown ID returns HTTP 404 with a JSON error.</p>
-    <img src="/api/random" alt="A randomly selected Ritter Sport photo">
+    <h2>Ritter Sport of the day</h2>
+    <p>Changes every day at <strong>00:00 UTC</strong>. Next reset: <time id="next-reset">the next 00:00 UTC</time>.</p>
+    <img id="today-photo" src="/api/today" alt="Today's Ritter Sport photo">
+    <script>
+      const dayMs = 24 * 60 * 60 * 1000;
+      const resetTime = document.getElementById('next-reset');
+      const todayPhoto = document.getElementById('today-photo');
+      let shownDay = Math.floor(Date.now() / dayMs);
+      let resetTimer;
+
+      function updateDailyPhoto() {
+        const now = Date.now();
+        const utcDay = Math.floor(now / dayMs);
+        if (utcDay !== shownDay) {
+          todayPhoto.src = `/api/today?refresh=${now}`;
+          shownDay = utcDay;
+        }
+
+        const nextReset = new Date((utcDay + 1) * dayMs);
+        resetTime.dateTime = nextReset.toISOString();
+        resetTime.textContent = `${nextReset.toISOString().slice(0, 16).replace('T', ' ')} UTC (${nextReset.toLocaleString()} your time)`;
+        clearTimeout(resetTimer);
+        resetTimer = setTimeout(updateDailyPhoto, nextReset.getTime() - now + 1000);
+      }
+
+      updateDailyPhoto();
+      document.addEventListener('visibilitychange', () => {
+        if (!document.hidden) updateDailyPhoto();
+      });
+    </script>
   </body>
 </html>

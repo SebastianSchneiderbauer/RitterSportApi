@@ -22,13 +22,14 @@ function sendError(response, status, message) {
   response.end(JSON.stringify({ error: message }));
 }
 
-function sendPhoto(response, id) {
+function sendPhoto(response, id, extraHeaders = {}) {
   const photo = fs.readFileSync(path.join(photoDirectory(), `${id}.jpeg`));
   response.writeHead(200, {
     'Content-Type': 'image/jpeg',
     'Content-Length': photo.length,
     'Cache-Control': 'no-store',
     'X-Photo-Id': id,
+    ...extraHeaders,
   });
   response.end(photo);
 }
