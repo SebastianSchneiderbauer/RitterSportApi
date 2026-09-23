@@ -3,27 +3,77 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Ritter Sport Photo API</title>
+    <title>Ritter Sport of the Day · Photo API</title>
     <style>
-      body { max-width: 720px; margin: 48px auto; padding: 0 20px; font: 16px/1.6 system-ui, sans-serif; color: #222; }
-      h1 { line-height: 1.2; }
-      code { background: #f2f2f2; padding: 2px 5px; border-radius: 4px; }
-      li { margin: 16px 0; }
-      img { display: block; max-width: min(100%, 320px); height: auto; margin-top: 24px; }
+      :root { color-scheme: light; font-family: system-ui, sans-serif; color: #252039; background: #f7f4ed; }
+      * { box-sizing: border-box; }
+      body { margin: 0; background: radial-gradient(circle at 50% 0, #e9e6ff 0, #f7f4ed 520px); }
+      a { color: inherit; }
+      main { max-width: 880px; margin: auto; padding: 24px 20px 80px; }
+      .site-header { display: flex; align-items: center; justify-content: space-between; gap: 20px; margin-bottom: 52px; }
+      .brand { font-weight: 800; letter-spacing: -.03em; text-decoration: none; }
+      .brand span { color: #6557ca; }
+      .photo-count { color: #696477; font-size: .9rem; }
+      .hero { text-align: center; }
+      .eyebrow { color: #6557ca; font-size: .8rem; font-weight: 800; letter-spacing: .16em; text-transform: uppercase; }
+      h1 { max-width: 760px; margin: 10px auto 16px; font-size: clamp(2.8rem, 8vw, 5.4rem); line-height: 1.05; letter-spacing: -.06em; }
+      .lead { max-width: 560px; margin: 0 auto 32px; color: #625d70; font-size: 1.1rem; line-height: 1.6; }
+      .photo-frame { display: block; max-width: 700px; margin: auto; padding: 12px; border: 1px solid #e3dded; border-radius: 22px; background: #fff; box-shadow: 0 24px 70px #352c6530; }
+      .photo-frame img { display: block; width: 100%; height: auto; border-radius: 12px; }
+      .reset-panel { display: flex; align-items: center; justify-content: space-between; gap: 20px; max-width: 700px; margin: 20px auto 0; padding: 20px 24px; border: 1px solid #e3dded; border-radius: 18px; background: #fff; text-align: left; }
+      .reset-label { margin: 0 0 4px; color: #6557ca; font-size: .75rem; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; }
+      .reset-time { display: block; font-weight: 700; line-height: 1.4; }
+      .reset-note { margin: 4px 0 0; color: #696477; font-size: .9rem; }
+      .button { display: inline-block; flex-shrink: 0; padding: 12px 18px; border-radius: 10px; background: #5546ba; color: #fff; font-weight: 700; text-align: center; text-decoration: none; }
+      .button:hover, .button:focus-visible { background: #403393; }
+      .api-section { max-width: 700px; margin: 72px auto 0; }
+      .api-section h2 { margin-bottom: 6px; font-size: 1.6rem; letter-spacing: -.03em; }
+      .api-section > p { margin-top: 0; color: #696477; line-height: 1.6; }
+      .endpoint-list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; margin-top: 24px; }
+      .endpoint { display: block; padding: 20px; border: 1px solid #e3dded; border-radius: 16px; background: #fff; text-decoration: none; }
+      .endpoint:hover, .endpoint:focus-visible { border-color: #6557ca; }
+      .endpoint code { color: #5546ba; font-weight: 700; }
+      .endpoint span { display: block; margin-top: 8px; color: #696477; font-size: .9rem; }
+      @media (max-width: 600px) {
+        .site-header { margin-bottom: 36px; }
+        .reset-panel { align-items: stretch; flex-direction: column; }
+        .endpoint-list { grid-template-columns: 1fr; }
+      }
     </style>
   </head>
   <body>
-    <h1>Ritter Sport Photo API</h1>
-    <p>Get one of 77 photos. IDs run from <code>0</code> to <code>76</code>. Each endpoint returns a JPEG image and an <code>X-Photo-Id</code> response header.</p>
-    <ul>
-      <li><code>GET /api/photos/:id</code> — <a href="/api/photos/0">view photo 0</a></li>
-      <li><code>GET /api/random</code> — <a href="/api/random">view a random photo</a></li>
-      <li><code>GET /api/today</code> — <a href="/api/today">view the Ritter Sport of the day</a></li>
-    </ul>
-    <p>An unknown ID returns HTTP 404 with a JSON error.</p>
-    <h2>Ritter Sport of the day</h2>
-    <p>Changes every day at <strong>00:00 UTC</strong>. Next reset: <time id="next-reset">the next 00:00 UTC</time>.</p>
-    <img id="today-photo" src="/api/today" alt="Today's Ritter Sport photo">
+    <main>
+      <header class="site-header">
+        <a class="brand" href="/">Ritter Sport <span>Photo API</span></a>
+        <span class="photo-count">77 photos · one daily pick</span>
+      </header>
+
+      <section class="hero" aria-labelledby="today-title">
+        <p class="eyebrow">A fresh pick every day</p>
+        <h1 id="today-title">Ritter Sport of the day</h1>
+        <p class="lead">One photo for everyone, changing at midnight UTC. Come back tomorrow for the next one.</p>
+        <a class="photo-frame" href="/api/today" aria-label="Open today's photo at full size">
+          <img id="today-photo" src="/api/today" alt="Today's Ritter Sport photo">
+        </a>
+        <div class="reset-panel">
+          <div>
+            <p class="reset-label">Next reset</p>
+            <time class="reset-time" id="next-reset">The next 00:00 UTC</time>
+            <p class="reset-note">New photo every day at 00:00 UTC.</p>
+          </div>
+          <a class="button" href="/api/today">Open today's photo →</a>
+        </div>
+      </section>
+
+      <section class="api-section" aria-labelledby="api-title">
+        <h2 id="api-title">Explore the API</h2>
+        <p>Use IDs 0–76 to choose a photo, or let the API surprise you. Each endpoint returns a JPEG and an <code>X-Photo-Id</code> response header.</p>
+        <div class="endpoint-list">
+          <a class="endpoint" href="/api/photos/0"><code>GET /api/photos/:id</code><span>Pick a photo by its ID</span></a>
+          <a class="endpoint" href="/api/random"><code>GET /api/random</code><span>Get a random photo</span></a>
+        </div>
+      </section>
+    </main>
     <script>
       const dayMs = 24 * 60 * 60 * 1000;
       const resetTime = document.getElementById('next-reset');
