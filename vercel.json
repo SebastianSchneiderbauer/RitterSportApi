@@ -1,0 +1,11 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "framework": null,
+  "rewrites": [
+    { "source": "/api/photos/:id", "destination": "/api/photos" }
+  ],
+  "functions": {
+    "api/photos.js": { "includeFiles": "ritterSportMemes/*.jpeg" },
+    "api/random.js": { "includeFiles": "ritterSportMemes/*.jpeg" }
+  }
+}
