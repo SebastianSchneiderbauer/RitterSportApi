@@ -1,6 +1,7 @@
 # Ritter Sport photo API
 
 The 77 photos in `ritterSportMemes/` have IDs `0` through `76` (from their JPEG filenames).
+The site root (`/`) has a short page with links to both endpoints.
 
 | Endpoint | Result |
 | --- | --- |

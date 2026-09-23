@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Ritter Sport Photo API</title>
+    <style>
+      body { max-width: 720px; margin: 48px auto; padding: 0 20px; font: 16px/1.6 system-ui, sans-serif; color: #222; }
+      h1 { line-height: 1.2; }
+      code { background: #f2f2f2; padding: 2px 5px; border-radius: 4px; }
+      li { margin: 16px 0; }
+      img { display: block; max-width: min(100%, 320px); height: auto; margin-top: 24px; }
+    </style>
+  </head>
+  <body>
+    <h1>Ritter Sport Photo API</h1>
+    <p>Get one of 77 photos. IDs run from <code>0</code> to <code>76</code>. Both endpoints return a JPEG image and an <code>X-Photo-Id</code> response header.</p>
+    <ul>
+      <li><code>GET /api/photos/:id</code> — <a href="/api/photos/0">view photo 0</a></li>
+      <li><code>GET /api/random</code> — <a href="/api/random">view a random photo</a></li>
+    </ul>
+    <p>An unknown ID returns HTTP 404 with a JSON error.</p>
+    <img src="/api/random" alt="A randomly selected Ritter Sport photo">
+  </body>
+</html>
