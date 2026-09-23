@@ -1,17 +1,38 @@
-# Ritter Sport photo API
+# Ritter Sport Meme Photo API
 
-The 77 photos in `ritterSportMemes/` have IDs `0` through `76` (from their JPEG filenames).
-The site root (`/`) has a short page with links to both endpoints.
+A small, dependency-free API for the 77 JPEGs in [`ritterSportMemes/`](ritterSportMemes/). Each photo's ID is its filename without `.jpeg`; the current IDs are `0` through `76`.
 
-| Endpoint | Result |
+**Live site:** [ritter-sport-api.vercel.app](https://ritter-sport-api.vercel.app/)
+
+## Endpoints
+
+| Request | What it returns |
 | --- | --- |
-| `GET /api/photos/:id` | The JPEG for that ID. For example, `/api/photos/0`. |
-| `GET /api/random` | One randomly selected JPEG from the available files. |
+| [`GET /api/photos/0`](https://ritter-sport-api.vercel.app/api/photos/0) | The JPEG with ID `0`. Replace `0` with another photo ID. |
+| [`GET /api/random`](https://ritter-sport-api.vercel.app/api/random) | One randomly selected JPEG. |
 
-Both successful responses have `Content-Type: image/jpeg` and an `X-Photo-Id` header containing the selected ID. An unknown ID returns HTTP 404 with `{"error":"Photo not found"}`. If there are no photos, either endpoint returns HTTP 404 with `{"error":"No photos available"}`. Other HTTP methods return 405.
+Both endpoints return the image bytes with `Content-Type: image/jpeg` and an `X-Photo-Id` header. For example, to save a photo:
 
-## Deploy on Vercel
+```sh
+curl -L -o photo.jpeg https://ritter-sport-api.vercel.app/api/photos/0
+```
 
-Import this GitHub repository as a Vercel project, keep the project root at the repository root, and use the **Other** framework preset. No build command, environment variables, or dependencies are needed. The `vercel.json` file includes the JPEGs in both function bundles. After deployment, use `https://<your-project-domain>/api/photos/0` or `https://<your-project-domain>/api/random`.
+Errors are JSON:
 
-To run the endpoint checks locally with Node.js, use `node --test`.
+| Case | Status | Body |
+| --- | --- | --- |
+| Unknown photo ID | 404 | `{"error":"Photo not found"}` |
+| No photos in the collection | 404 | `{"error":"No photos available"}` |
+| Method other than GET | 405 | `{"error":"Method not allowed"}` |
+
+## Run checks locally
+
+Use Node.js (`node --test`) or Bun (`bun test`). The tests cover photo lookup, random selection, invalid IDs, and an empty collection. No packages need to be installed.
+
+## Deployment
+
+The project is deployed from the `master` branch on Vercel. Pushing a commit to that branch triggers a new deployment. For a separate Vercel project, import this repository, set the root directory to `./`, and use the **Other** preset. No build command or environment variables are required. [`vercel.json`](vercel.json) routes `/api/photos/:id` and includes the JPEGs in the functions.
+
+## Photo source
+
+The photos were taken from [this Reddit post](https://www.reddit.com/r/de/comments/6a0c9q/mir_wurde_gesagt_ich_solle_meine_ritter_sport/) and resized to the same dimensions, as recorded in [`source.txt`](source.txt).
